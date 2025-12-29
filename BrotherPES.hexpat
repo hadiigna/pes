@@ -53,12 +53,15 @@ struct PESFile {
     u16 snapToGrid;
     u16 gridInterval;
     u16 UNKNOWN_1;
-    u16 optimizeEntryExitPoints;
+    u16 optimizeEntryExitPoints; //ぬい始終点最適化
     
     u8 fromImageStringLength;
     char path[fromImageStringLength];
-};
 
+   // Other things... CSewSeg... CEmbOne... looks like MFC CArchive format???
+
+
+};
 
 bitfield Stitch {
     bool isLongForm: 1;
@@ -72,6 +75,7 @@ bitfield Stitch {
 };
 
 struct PECStitch {
+    // unit: 0.1 mm
     be Stitch dx;
     be Stitch dy;
 } [[format("formatPecStitch")]];
@@ -88,6 +92,7 @@ fn formatPecStitchCommand(u8 controlCode) {
         flags += "JUMP ";
     }
 
+// NOTE: Is this really a flag combination?
 
     flags += "L"; // long form indicator
     return flags;
@@ -103,6 +108,7 @@ fn formatPecStitch(PECStitch s) {
 };
 
 struct PECThumbnailImage {
+// TODO
     u16 something;
 };
 
@@ -121,12 +127,16 @@ struct PECFile {
     u16;
     u24 thumbnailOffset;
     char UNKNOWN_31FFF0[3];
-    s16 width;
+    s16 width; // unit: 0.1mm
     s16 height;
-    type::Hex<u16> UNKNOWN_11;
-    type::Hex<u16> UNKNOWN_22;
+    type::Hex<u16> UNKNOWN_11; // E0 01. Changing E0 will cause error. changing 01 doesn't do anything. unknown.
+    type::Hex<u16> UNKNOWN_22; // B0 01. Maybe similar to thread change sequence FE >B0 [01/02]< ?? Changing this value seems to skip first thread color.
+// So maybe E0 01 is a start sequence???
     //type::Hex<u32> UNKNOWN_33;
-    PECStitch initStitch;
+
+    PECStitch initStitch; // looks like plain JUMP x, y; so maybe should be consolidated into stitchList
+
+   // Initial always looks like (JUMP x, JUMP y), (0, 0), ... Automatically added lock stitches (3 stitch) ..., (x1, y1), (x2, y2), ...
 
     PECStitch stitchList[while(!std::mem::reached(addressof(this) + thumbnailOffset + 512))];
     PECThumbnailImage thumbnailImage;
