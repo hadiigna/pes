@@ -137,6 +137,7 @@ struct PECFile {
     PECStitch initStitch; // looks like plain JUMP x, y; so maybe should be consolidated into stitchList
 
    // Initial always looks like (JUMP x, JUMP y), (0, 0), ... Automatically added lock stitches (3 stitch) ..., (x1, y1), (x2, y2), ...
+   // note: Wilcom Hatch produces (TRIM x, TRIM y), (0, 0) .... but seems to have same effect as JUMP
 
     PECStitch stitchList[while(!std::mem::reached(addressof(this) + thumbnailOffset + 512))];
     PECThumbnailImage thumbnailImage;
