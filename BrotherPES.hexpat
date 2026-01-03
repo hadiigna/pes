@@ -126,7 +126,7 @@ struct PECFile {
     
     u16;
     u24 thumbnailOffset;
-    char UNKNOWN_31FFF0[3];
+    char UNKNOWN_31FFF0[3];  // FF part maybe "SewMaskUnit", value == -1 ?
     s16 width; // unit: 0.1mm
     s16 height;
     type::Hex<u16> UNKNOWN_11; // E0 01. Changing E0 will cause error. changing 01 doesn't do anything. unknown.
