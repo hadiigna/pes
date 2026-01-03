@@ -125,7 +125,7 @@ struct PECFile {
     char PADDING_[462-numColors_minusOne];
     
     u16;
-    u24 thumbnailOffset;
+    u24 thumbnailOffset; // maybe "Sew/stitch part command byte size" is more accurate description?
     char UNKNOWN_31FFF0[3];  // FF part maybe "SewMaskUnit", value == -1 ?
     s16 width; // unit: 0.1mm
     s16 height;
