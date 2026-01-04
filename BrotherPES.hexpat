@@ -115,17 +115,17 @@ struct PECThumbnailImage {
 struct PECFile {
     char label[19];
     char const_CarriageReturn;
-    u8 UNKNOWN_2020_PATTERN[12];
+    u8 UNKNOWN_2020_PATTERN[12]; // The last FF indicates "NewColorExist" bool flag
     u16 UNKNOWN_FF_00;
     u8 thumbnailByteStride;
     u8 thumbnailHeightPx;
-    u8 UNKNOWN_2020_PATTERN_2[12];
+    u8 UNKNOWN_2020_PATTERN_2[12]; // PEC + 0x2d = FileBrandExist? FF = true, else = false
     u8 numColors_minusOne;
     u8 palleteIdx[1+numColors_minusOne];
     char PADDING_[462-numColors_minusOne];
     
-    u16;
-    u24 thumbnailOffset; // maybe "Sew/stitch part command byte size" is more accurate description?
+    u16 thumbnailOffset_small; // maybe: sew size for small size. If this part is 00 00, check next 3 bytes. (In theory, if you set this, max will be ~64 KB)
+    u24 thumbnailOffset; // maybe "Sew/stitch part command byte size" in an extended version (3 bytes) is more accurate description? (Theoritically max ~16 MB)
     char UNKNOWN_31FFF0[3];  // FF part maybe "SewMaskUnit", value == -1 ?
     s16 width; // unit: 0.1mm
     s16 height;
